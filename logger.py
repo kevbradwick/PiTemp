@@ -15,6 +15,8 @@ parser.add_argument('-s', metavar='HOST', default='localhost', help='MySQL host'
 parser.add_argument('-u', metavar='USER', default='root', help='MySQL username')
 parser.add_argument('-p', metavar='PASSWORD', default='', help='MySQL password')
 parser.add_argument('-d', metavar='DB', default='tempi', help='MySQL database')
+parser.add_argument('-l', metavar='LOCATION', help='The location of the sensor',
+                    default='UNKNOWN')
 
 # the base path to the device folder
 DEVICE_DIR = '/sys/bus/w1/devices'
@@ -59,4 +61,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     while True:
         print(_read_temperature())
-        sleep(1)
+        sleep(args.i)

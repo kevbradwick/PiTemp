@@ -1,6 +1,8 @@
 import os
-from flask import Flask, render_template, Response, jsonify
 
+from flask import Flask, render_template, jsonify
+
+from logger import get_temperature
 
 app = Flask('tempi')
 
@@ -12,7 +14,8 @@ def index():
 
 @app.route('/temperature')
 def current_temperature():
-    return jsonify({'celcius': 12.3, 'farenheit': 45.32})
+    c, f = get_temperature()
+    return jsonify({'celcius': c, 'farenheit': f})
 
 
 if __name__ == '__main__':

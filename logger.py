@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import argparse
 import re
-from time import sleep
+from time import sleep, strftime
 from glob import glob
 from os.path import join
+from MySQLdb import connect
+from datetime import datetime
 
 
 # the argparse module gives us a nice command line interface to gather user
@@ -21,6 +23,8 @@ parser.add_argument('-l', metavar='LOCATION', help='The location of the sensor',
 # the base path to the device folder
 DEVICE_DIR = '/sys/bus/w1/devices'
 
+args = None
+
 
 def _read_raw_file():
     """
@@ -35,7 +39,7 @@ def _read_raw_file():
     return list(filter(None, content.split('\n')))
 
 
-def _read_temperature():
+def get_temperature():
     """
     Reads the temperature from the output file
     :return: a tuple consisting of (celsius, fahrenheit)
@@ -54,11 +58,40 @@ def _read_temperature():
     value = float(m.groups()[0])
     celsius = value / 1000.0
     fahrenheit = celsius * 9.0 / 5.0 + 32.0
-    return celsius, fahrenheit
+    return round(celsius, 2), round(fahrenheit, 2)
+
+
+def add_reading(celsius, fahrenheit):
+    """
+    Adds a reading to the database
+    :param celsius:
+    :param fahrenheit:
+    :return:
+    """
+    global args
+    con = connect(args.s, args.u, args.p, args.d)
+    cur = con.cursor()
+
+    sql = 'INSERT INTO `readings` (`location`, `reading_time`, `celsius`, ' \
+          '`fahrenheit`) VALUES (%(location)s, %(now)s, %(celsius)s, ' \
+          '%(fahrenheit)s)'
+
+    data = {
+        'location': args.l,
+        'now': datetime.now(),
+        'celsius': celsius,
+        'fahrenheit': fahrenheit,
+    }
+
+    cur.execute(sql, data)
+    con.commit()
+    con.close()
 
 
 if __name__ == '__main__':
     args = parser.parse_args()
     while True:
-        print(_read_temperature())
+        readings = get_temperature()
+        if readings:
+            add_reading(*readings)
         sleep(args.i)

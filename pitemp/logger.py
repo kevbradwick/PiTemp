@@ -1,24 +1,12 @@
 #!/usr/bin/env python
-import argparse
 import re
-from time import sleep, strftime
+from datetime import datetime
 from glob import glob
 from os.path import join
-from MySQLdb import connect
-from datetime import datetime
+from time import sleep
 
-
-# the argparse module gives us a nice command line interface to gather user
-# options
-parser = argparse.ArgumentParser(description='Temperature sensor logger')
-parser.add_argument('-i', type=int, default=60, metavar='SECONDS',
-                    help='Number of seconds to poll the sensor for new data')
-parser.add_argument('-s', metavar='HOST', default='localhost', help='MySQL host')
-parser.add_argument('-u', metavar='USER', default='root', help='MySQL username')
-parser.add_argument('-p', metavar='PASSWORD', default='', help='MySQL password')
-parser.add_argument('-d', metavar='DB', default='tempi', help='MySQL database')
-parser.add_argument('-l', metavar='LOCATION', help='The location of the sensor',
-                    default='UNKNOWN')
+from pitemp import get_config
+from pitemp.db import execute
 
 # the base path to the device folder
 DEVICE_DIR = '/sys/bus/w1/devices'
@@ -68,30 +56,23 @@ def add_reading(celsius, fahrenheit):
     :param fahrenheit:
     :return:
     """
-    global args
-    con = connect(args.s, args.u, args.p, args.d)
-    cur = con.cursor()
-
     sql = 'INSERT INTO `readings` (`location`, `reading_time`, `celsius`, ' \
           '`fahrenheit`) VALUES (%(location)s, %(now)s, %(celsius)s, ' \
           '%(fahrenheit)s)'
 
     data = {
-        'location': args.l,
+        'location': get_config('location', 'UNKNOWN'),
         'now': datetime.now(),
         'celsius': celsius,
         'fahrenheit': fahrenheit,
     }
 
-    cur.execute(sql, data)
-    con.commit()
-    con.close()
+    execute(sql, data)
 
 
 if __name__ == '__main__':
-    args = parser.parse_args()
     while True:
         readings = get_temperature()
         if readings:
             add_reading(*readings)
-        sleep(args.i)
+        sleep(get_config('interval', 60))

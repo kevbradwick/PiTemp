@@ -4,11 +4,24 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/dist/css/bootstrap.min.css') }}" media="all">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='pitemp.css') }}" media="all">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
     <title>Tempi - Temperature sensor app for the Raspberry Pi</title>
 </head>
 <body>
 
+<div class="container" id="intro">
+    <h2>PiTemp</h2>
+    <p class="lead">Raspberry Pi Temperature Sensor demo</p>
+    <hr class="half-rule"/>
+</div>
+
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+
 <script src="{{ url_for('static', filename='vendor/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='pitemp.js') }}"></script>
 </body>
 </html>

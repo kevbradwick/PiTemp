@@ -1,0 +1,19 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+#intro {
+    text-align: center;
+}
+
+#current-temperature {
+    font-size: 52px;
+    color: #00BAF7;
+}
+
+#intro h2 {
+    font-size: 30px;
+}
+.half-rule {
+    width: 100px;
+    margin: 40px auto;
+}

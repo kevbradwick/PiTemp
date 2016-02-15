@@ -3,10 +3,11 @@ from MySQLdb import connect
 from pitemp import get_config
 
 
-def execute(sql, data=None):
+def execute(sql, data=None, fetch_all=False):
     """
     :param sql: string
     :param data: dict
+    :param fetch_all: bool
     :return:
     """
     host = get_config('host', 'localhost')
@@ -18,4 +19,10 @@ def execute(sql, data=None):
     cur = con.cursor()
     cur.execute(sql, data)
     con.commit()
+
+    result = None
+    if fetch_all:
+        result = cur.fetchall()
+
     con.close()
+    return result

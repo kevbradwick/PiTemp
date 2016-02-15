@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="col-md-6">
+<div class="col-md-4">
     <h4 class="text-center">Current Temperature</h4>
     <p id="current-temperature" class="text-center">26&#8451;</p>
+</div>
+
+<div class="col-md-8">
+    <canvas id="temperature-chart" width="500" height="400"></canvas>
 </div>
 {% endblock %}

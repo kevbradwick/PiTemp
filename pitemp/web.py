@@ -28,20 +28,34 @@ def current_temperature():
 
 @app.route('/data')
 def get_data():
-    date = request.args.get('from')
+    location = request.args.get('location')
     interval = request.args.get('interval', 'hour').upper()
     if interval not in ['HOUR', 'MINUTE']:
         raise abort(400)
 
     sql = 'SELECT AVG(celsius), AVG(fahrenheit), reading_time FROM readings'
     data = {}
-    if date:
-        sql = sql + ' WHERE reading_time > %(date)s'
-        data['date'] = date
+    if location:
+        sql += ' WHERE location = %(location)s'
+        data['location'] = location
 
-    sql = sql + ' GROUP BY {}(reading_time)'.format(interval)
-    rows = execute(sql, data)
-    print(rows)
+    sql += ' GROUP BY {}(reading_time)'.format(interval)
+    sql += ' ORDER BY reading_time DESC LIMIT 0, 12'
+
+    result = {}
+    for celsius, fahrenheit, time in execute(sql, data, True):
+        result[time.strftime('%H:00')] = {
+            'celsius': round(celsius, 2),
+            'fahrenheit': round(fahrenheit, 2),
+        }
+    return jsonify(result)
+
+
+@app.route('/locations')
+def get_locations():
+    sql = 'SELECT DISTINCT(location) FROM readings'
+    data = [location[0] for location in execute(sql, None, True)]
+    return jsonify({'data': data})
 
 
 if __name__ == '__main__':

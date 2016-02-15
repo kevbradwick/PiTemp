@@ -8,7 +8,6 @@ _config = None
 
 def _load_config():
     global _config
-    print(ROOT_DIR)
     with open(join(ROOT_DIR, 'config.json'), 'r') as fp:
         _config = json.load(fp)
 

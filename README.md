@@ -18,3 +18,34 @@ You will need the Python development headers to build the MySQL client library.
 Install MySQL and create a new database
 
     sudo apt-get install mysql-server mysql-client
+    
+Execute the database script on your new database
+
+    mysql -u [username] -p [password] [database] < database.sql
+    
+Install the app dependencies
+
+    pip install -r requirements.txt
+    bower install
+
+Create the config file and edit its contents so that your app can connect to
+the database.
+
+    cp config.json-sample config.json
+    
+### Start logging the temperature
+
+This script will use the values in the `config.json` to connect to the database
+and log events.
+
+    PYTHONPATH=`pwd` python pitemp/logger.py &
+    
+(This will run the logger in the background)
+    
+### Start the web application
+
+    ./runserver.sh
+    
+You can now visit the page in your browser by using the RPi's IP address e.g.
+
+    http://192.168.0.9:5000

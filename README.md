@@ -2,7 +2,7 @@ PiTemp
 ------
 
 A project that logs data from the temperature sensor and visualises it in the
-web browser.
+web browser. I've created this app to work with the tutorial from [CamJam](http://camjam.me/?page_id=623).
 
 ![Screenshot](/static/screenshot.png?raw=true)
 

@@ -1,11 +1,11 @@
 /*global Chart */
 (function($) {
 
-  //setInterval(function() {
-  //  $.ajax('/temperature').done(function(data) {
-  //    $('#current-temperature').html(data.celsius + '&#8451;');
-  //  });
-  //}, 1500);
+  setInterval(function() {
+    $.ajax('/temperature').done(function(data) {
+      $('#current-temperature').html(data.celsius + '&#8451;');
+    });
+  }, 1500);
 
   var ctx = document.getElementById('temperature-chart').getContext('2d');
 

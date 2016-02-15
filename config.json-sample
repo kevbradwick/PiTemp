@@ -4,7 +4,7 @@
   "password": "password",
   "database": "pitemp",
   "location": "UNKNOWN",
-  "interval": 1,
+  "interval": 60,
   "debug": true,
   "webserver": {
     "host": "0.0.0.0",
